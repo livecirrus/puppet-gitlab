@@ -32,15 +32,15 @@ server {
 <% else %>
 server {
   listen 80;
-  server_name <%= $default_servername %>.*;
+  server_name <%= @gitlab_url %>;
   server_tokens off;
   #return 301 https://$host$request_uri;
   return 301 https://<%= @gitlab_url %>$request_uri;
 
 }
 server {
-  listen 443 ssl default_server;
-  server_name <%= @gitlab_url %> <%= @hostname %>;
+  listen 443 ssl;
+  server_name <%= @gitlab_url %>;
   server_tokens off;
   root <%= @git_home %>/gitlab/public;
   ssl                           on;
