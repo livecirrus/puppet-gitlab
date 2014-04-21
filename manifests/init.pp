@@ -1,8 +1,5 @@
 # init -> packages -> user -> setup -> install -> config -> service
 class gitlab (
-
-    # Manage packages
-    $gitlab_manage_packages = $gitlab::params::gitlab_manage_packages,
     
     # Gitlab server settings
     $gitlab_branch          = $gitlab::params::gitlab_branch,
@@ -18,16 +15,13 @@ class gitlab (
     # Database
     $gitlab_dbtype          = $gitlab::params::gitlab_dbtype,
     $gitlab_dbname          = $gitlab::params::gitlab_dbname,
-    $gitlab_dbuser          = $gitlab::params::gitlab_dbuser,
-    $gitlab_dbpwd           = $gitlab::params::gitlab_dbpwd,
-    $gitlab_dbhost          = $gitlab::params::gitlab_dbhost,
-    $gitlab_dbport          = $gitlab::params::gitlab_dbport,
     
     # Web & Security
     $gitlab_ssl             = $gitlab::params::gitlab_ssl,
     $gitlab_ssl_cert        = $gitlab::params::gitlab_ssl_cert,
     $gitlab_ssl_key         = $gitlab::params::gitlab_ssl_key,
     $gitlab_ssl_self_signed = $gitlab::params::gitlab_ssl_self_signed,
+    $gitlab_url             = $gitlab::params::gitlab_url,
     $default_servername     = $gitlab::params::default_servername, 
     
     # LDAP
@@ -106,58 +100,26 @@ class gitlab (
   if $::puppetversion <= '3.0.0' {
     fail("Module requires puppet 3.0 or greater, you have ${::puppetversion}")
   }
-	
 
+  include gitlab::packages	    
+  include gitlab::user
+  include gitlab::setup
+  include gitlab::install
+  include gitlab::config
+  include gitlab::service
 
-
-# Allow user to install nginx, mysql, git ect.. packages separately
-  if $gitlab_manage_packages == true {
-    info("Gitlab will manage packages because gitlab_manage_packages is: ${gitlab_manage_packages} ")
-    
-    include gitlab::packages
-    include gitlab::user
-    include gitlab::setup
-    include gitlab::install
-    include gitlab::config
-    include gitlab::service
-  
-    anchor { 'gitlab::begin':}
-    anchor { 'gitlab::end':}
-    # Installation order
-    Anchor['gitlab::begin']      ->
-     Class['::gitlab::packages'] ->
-     Class['::gitlab::user']     ->
-     Class['::gitlab::setup']    ->
-     Class['::gitlab::install']  ->
-     Class['::gitlab::config']   ->
-     Class['::gitlab::service']  ->
-    Anchor['gitlab::end']
-      
-  }
-  else {
-    info("You must install packages manually because gitlab_manage_packages is: ${gitlab_manage_packages}, see manifests/packages.pp")
-    
-    include gitlab::user
-    include gitlab::setup
-    include gitlab::install
-    include gitlab::config
-    include gitlab::service
-  
-    anchor { 'gitlab::begin':}
-    anchor { 'gitlab::end':}
-    # Installation order
-    Anchor['gitlab::begin']      ->
-     Class['::gitlab::user']     ->
-     Class['::gitlab::setup']    ->
-     Class['::gitlab::install']  ->
-     Class['::gitlab::config']   ->
-     Class['::gitlab::service']  ->
-    Anchor['gitlab::end']
-  }
-    
-
-
-
+  anchor { 'gitlab::begin':}
+  anchor { 'gitlab::end':}
+  # Installation order
+  Anchor['gitlab::begin']      ->
+   Class['::gitlab::packages'] ->
+   Class['::gitlab::user']     ->
+   Class['::gitlab::setup']    ->
+   Class['::gitlab::install']  ->
+   Class['::gitlab::config']   ->
+   Class['::gitlab::service']  ->
+  Anchor['gitlab::end']
+   
 }# end gitlab
     
     
