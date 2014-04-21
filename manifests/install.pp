@@ -3,7 +3,7 @@ class gitlab::install inherits gitlab {
   # Execute all commands as the git user
   Exec {
     user => "${gitlab::git_user}",
-    path => '/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/sbin:/bin',
+    path => '/usr/local/rvm/bin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/sbin:/bin',
   }
 
   # Install gitlab-shell
@@ -15,7 +15,7 @@ class gitlab::install inherits gitlab {
   # Install gitlab
   exec { 'install gitlab':
     cwd     => "${gitlab::git_home}/gitlab",
-    command => 'bundle install --deployment --without development test postgres aws',
+    command => 'rvm-shell -c "bundle install --deployment --without development test mysql aws"',
     unless  => "/usr/bin/test -f ${gitlab::git_home}/.gitlab_setup_done",
     timeout => 600,
     before  => [
@@ -27,7 +27,7 @@ class gitlab::install inherits gitlab {
   # Setup gitlab database
   exec { 'setup gitlab database':
     cwd     => "${gitlab::git_home}/gitlab",
-    command => '/usr/bin/yes yes | bundle exec rake gitlab:setup RAILS_ENV=production',
+    command => '/usr/bin/yes yes | rvm-shell -c "bundle exec rake gitlab:setup RAILS_ENV=production"',
     unless  => "/usr/bin/test -f ${gitlab::git_home}/.gitlab_database_done",
     timeout => 600,
     before  => File["${gitlab::git_home}/.gitlab_database_done"],

@@ -12,6 +12,7 @@ class gitlab::user inherits gitlab {
     home        =>  "${gitlab::git_home}",
     # system     =>  true, #Makes sure user has uid less than 500 (or 1000)
     managehome  =>  true,
+    groups      => 'rvm',
     comment     =>  "${gitlab::git_comment}", # Same as --gecos
   }
 

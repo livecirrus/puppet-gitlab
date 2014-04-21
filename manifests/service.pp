@@ -21,7 +21,7 @@ class gitlab::service inherits gitlab {
   }
 
   # 6-4 added a precompile rake command
-  exec {'bundle exec rake assets:precompile RAILS_ENV=production':
+  exec {'/usr/local/rvm/bin/rvm-shell -c "bundle exec rake assets:precompile RAILS_ENV=production"':
     cwd     =>  "${gitlab::git_home}/gitlab",
     user    =>  "${gitlab::git_user}",
     path    =>  '/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/sbin:/bin',
@@ -37,13 +37,4 @@ class gitlab::service inherits gitlab {
     group   =>  'git',
     mode    =>  '0644',
   }
-
-  service { 'nginx' :
-    ensure      =>  running,
-    enable      =>  true,
-    hasrestart  =>  true,
-    hasstatus   =>  true,
-    require     =>  Service ['gitlab'],
-  }
-
 }
