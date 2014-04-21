@@ -1,17 +1,17 @@
 # MANAGED BY PUPPET
 # Module:: gitlab
 #
+#
 # PRODUCTION
 #
 production:
-  adapter: mysql2
-  encoding: utf8
-  reconnect: false
+  adapter: postgresql
+  encoding: unicode
   database: <%= @gitlab_dbname %>
   pool: 10
-  username: <%= @gitlab_dbuser %>
-  password: <%= @gitlab_dbpwd %>
-  host: <%= @gitlab_dbhost %>
+  # username: git
+  # password:
   # host: localhost
-  # socket: /tmp/mysql.sock
-
+  # port: 5432 
+  # socket: /tmp/postgresql.sock
+  
