@@ -16,18 +16,15 @@ class gitlab::params {
   $gitlabshell_sources    = 'git://github.com/gitlabhq/gitlab-shell.git' 
   
   # Database
-  $gitlab_dbtype          = 'mysql'
+  $gitlab_dbtype          = 'postgresql'
   $gitlab_dbname          = 'gitlabhq_production'
-  $gitlab_dbuser          = 'gitlab'
-  $gitlab_dbpwd           = 'changeme'
-  $gitlab_dbhost          = 'localhost'
-  $gitlab_dbport          = '3306'
 
   # Web & Security
   $gitlab_ssl             = false
   $gitlab_ssl_cert        = '/etc/ssl/certs/ssl-cert-snakeoil.pem'
   $gitlab_ssl_key         = '/etc/ssl/private/ssl-cert-snakeoil.key'
   $gitlab_ssl_self_signed = false # Do not use self signed certs in production!
+  $gitlab_url             = $fqdn
   $default_servername     = 'gitlab' # example gitlab.foo.com  
 
   
