@@ -67,4 +67,17 @@
                   ],
   }
 
+  # Copy the Unicorn config
+  file { "${gitlab::git_home}/gitlab/config/initializers/rack_attack.rb":
+    ensure    =>  file,
+    source   =>  "${gitlab::git_home}/gitlab/config/initializers/rack_attack.rb.example",
+    owner     =>  "${gitlab::git_user}",
+    group     =>  'git',
+    require   =>  [
+              Vcsrepo["${gitlab::git_home}/gitlab-shell"],
+              Vcsrepo["${gitlab::git_home}/gitlab"],
+                  ],
+  }
+
+
 }# end setup.pp
